@@ -15,13 +15,17 @@ namespace StockIndicator
            Console.WriteLine("Input URL");
            string url = Console.ReadLine();
             var result = false;
-            // Infinite loop
-            
+
+            // Infinite loop           
             while (true)
             {
                 if (url.ToLower().Contains("currys"))
                 {
-                   result = await Currys.CurrysStockAsync(url);
+                    result = await Currys.CurrysStockAsync(url);
+                }
+                else if (url.ToLower().Contains("argos"))
+                {
+                    result = await Argos.ArgosStockAsync(url);
                 }
                 
                 if (result == false)

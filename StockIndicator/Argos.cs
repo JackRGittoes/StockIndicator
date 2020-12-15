@@ -8,35 +8,37 @@ using System.Threading.Tasks;
 
 namespace StockIndicator
 {
-    public class Currys
+    public class Argos
     {
         static readonly HttpClient client = new HttpClient();
         static readonly HtmlDocument htmlDoc = new HtmlDocument();
-        public static async Task<bool> CurrysStockAsync(string url)
+        public static async Task<bool> ArgosStockAsync(string url)
         {
             bool IsTrue = false;
-            while(IsTrue)
+            while (IsTrue == false)
             {
                 var responseBody = await client.GetStringAsync(url);
                 htmlDoc.LoadHtml(responseBody);
 
                 try
                 {
-                    foreach (var item in htmlDoc.DocumentNode.SelectNodes("//*[@data-button-label]"))
+                    foreach (var item in htmlDoc.DocumentNode.SelectNodes("//strong"))
                     {
-                        if (item.GetAttributeValue("data-button-label", "").Contains("Add to basket"))
+                       
+                        if (item.InnerText.Contains("Not available"))
                         {
-                            return true;    
+                           return false;
                         }
                         
                     };
                 }
                 catch (NullReferenceException)
                 {
-                    return false;
+                    return true;
                 }
+                IsTrue = true;
             }
-            return false;
+            return true;
         }
     }
 }
