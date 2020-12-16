@@ -27,6 +27,10 @@ namespace StockIndicator
                 {
                     result = await Argos.ArgosStockAsync(url);
                 }
+                else if (url.ToLower().Contains("amazon"))
+                {
+                    result = await Amazon.AmazonStockAsync(url);
+                }
                 
                 if (result == false)
                 {
