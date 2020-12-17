@@ -14,8 +14,26 @@ namespace StockIndicator
             var sleepTime = CheckStockTimer();
             var url = GetURL();      
             var retailer = WhatRetailer(url);
-            var stock = await Checker(retailer, url);
-            await IsInStockAsync(stock, url, retailer, sleepTime);
+
+            var isTrue = false;
+            var inStock = false;
+            while (isTrue == false)
+            {
+                if (retailer == 0)
+                {
+                    Console.WriteLine("Invalid URL");
+                    url = GetURL();
+                    retailer = WhatRetailer(url);
+
+                }
+                else
+                {
+                    inStock = await StockChecker.StockCheckerAsync(url, retailer);
+                    break;
+                }
+            }
+
+            await IsInStockAsync(inStock, url, retailer, sleepTime);
            
         }
 
@@ -70,27 +88,6 @@ namespace StockIndicator
             return 0;
         }
         
-        public static async Task<bool> Checker(int retailer, string url)
-        {
-            var isTrue = false;
-            var result = false;
-            while (isTrue == false)
-            {
-                if (retailer == 0)
-                {
-                    Console.WriteLine("Invalid URL");
-                    url = GetURL();
-                    retailer = WhatRetailer(url);
-                    
-                }
-                else
-                {
-                    result = await StockChecker.StockCheckerAsync(url, retailer);
-                    break;
-                }                              
-            }
-            return result;
-        }
 
         public static async Task<bool> IsInStockAsync(bool result, string url, int retailer, int sleepTime)
         {
