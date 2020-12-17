@@ -8,43 +8,119 @@ namespace StockIndicator
 {
     public class Program
     {
-         
+
         public static async Task Main()
         {
-            
-           Console.WriteLine("Input URL");
-           string url = Console.ReadLine();
-            var result = false;
-
-            // Infinite loop           
-            while (true)
-            {
-                if (url.ToLower().Contains("currys"))
-                {
-                    result = await Currys.CurrysStockAsync(url);
-                }
-                else if (url.ToLower().Contains("argos"))
-                {
-                    result = await Argos.ArgosStockAsync(url);
-                }
-                else if (url.ToLower().Contains("amazon"))
-                {
-                    result = await Amazon.AmazonStockAsync(url);
-                }
-                
-                if (result == false)
-                {
-                    Console.WriteLine("\n Out of stock");
-                }
-                else
-                {
-                    Console.WriteLine("\n In stock");
-                }
-                Thread.Sleep(5000);
-            }
-
+            var sleepTime = CheckStockTimer();
+            var url = GetURL();      
+            var retailer = WhatRetailer(url);
+            var stock = await StockChecker(retailer, url);
+            await IsInStockAsync(stock, url, retailer, sleepTime);
+           
         }
 
+        public static int CheckStockTimer()
+        {
+            int sleepTime;
+            try
+            {
+                Console.WriteLine("Input in Ms how often you want to check for stock (e.g. 5000 = 5 seconds)\nMinimum 5 seconds");
+                sleepTime = Convert.ToInt32(Console.ReadLine());
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Defaulted to 5 seconds");
+                return 5000;
+            }
+            if(sleepTime < 5000)
+            {
+                return 5000;
+            }
+            return sleepTime;
+            
+        }
+        public static string GetURL()
+        {
+            Console.WriteLine("\nInput URL");
+            var url = Console.ReadLine();
+            return url;
+        }
+
+        public static int WhatRetailer(string url)
+        {
+            /* 1 = Currys
+             * 2 = Argos
+             * 3 = Amazon 
+             */
+
+            //Returns an integer value representing which retailer
+            if (url.ToLower().Contains("currys"))
+            {
+                return 1;
+            }
+            else if (url.ToLower().Contains("argos"))
+            {
+                return 2;
+            }
+            else if (url.ToLower().Contains("amazon"))
+            {
+                return 3;
+            }
+            return 0;
+        }
         
+        public static async Task<bool> StockChecker(int retailer, string url)
+        {
+            var isTrue = false;
+            var result = false;
+            while (isTrue == false)
+            {
+                switch (retailer)
+                {
+                    case 1:
+                        result = await Currys.CurrysStockAsync(url);
+                        isTrue = true;
+                        break;
+                    case 2:
+                        result = await Argos.ArgosStockAsync(url);
+                        isTrue = true;
+                        break;
+                    case 3:
+                        result = await Amazon.AmazonStockAsync(url);
+                        isTrue = true;
+                        break;
+
+                    //Default If Invalid Url
+                    default:
+                        Console.WriteLine("Invalid URL");
+                        url = GetURL();
+                        retailer = WhatRetailer(url);
+                        break;
+                }
+            }
+            return result;
+        }
+
+        public static async Task<bool> IsInStockAsync(bool result, string url, int retailer, int sleepTime)
+        {
+            while (result == false)
+            {
+
+                Console.WriteLine("Out Of Stock");
+
+                //Timeout before starting checks again
+                Thread.Sleep(sleepTime);
+
+                Console.WriteLine("Checking For Stock...");
+                await StockChecker(retailer, url);
+            }  
+            if(result == true)
+            {
+                Console.WriteLine("\nItem is in stock\n\nPress Any Key To Exit");
+                Console.ReadLine();
+            }
+            return true;
+        }
     }
 }
