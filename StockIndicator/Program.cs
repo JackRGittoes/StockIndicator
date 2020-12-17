@@ -12,17 +12,15 @@ namespace StockIndicator
 
         public static async Task Main()
         {
-            var sleepTime = CheckStockTimer();
+            var sleepTime = SleepTimer();
             var urls = GetURL();
-
-             await IsInStockAsync(urls, sleepTime);
+            await IsInStockAsync(urls, sleepTime);
             Console.WriteLine("No Items left to track, press enter to exit");
-            
-        }
-           
-        
 
-        public static int CheckStockTimer()
+        }
+
+
+        public static int SleepTimer()
         {
             int sleepTime;
             try
@@ -36,12 +34,12 @@ namespace StockIndicator
                 Console.WriteLine("Defaulted to 5 seconds");
                 return 5000;
             }
-            if(sleepTime < 5000)
+            if (sleepTime < 5000)
             {
                 return 5000;
             }
             return sleepTime;
-            
+
         }
         public static List<String> GetURL()
         {
@@ -97,47 +95,53 @@ namespace StockIndicator
             }
             return 0;
         }
-        
+
 
         public static async Task<bool> IsInStockAsync(List<string> urls, int sleepTime)
         {
             var result = false;
-            while(result == false)
-            for (int i = 0; i < urls.Count; i++)
-            {                   
+            while (result == false)
+                for (int i = 0; i < urls.Count; i++)
+                {
                     var urlNumber = i + 1;
                     Console.WriteLine($"\nChecking For URL {urlNumber}'s Stock...");
-                    
+
                     var retailer = WhatRetailer(urls[i]);
                     if (retailer == 0)
                     {
-                        Console.WriteLine($"URL {urlNumber} is invalid, Skipping to next in list");                    
+                        Console.WriteLine($"URL {urlNumber} is invalid, Skipping to next in list");
+                        urls.Remove(urls[i]);
                     }
                     else
                     {
-                       result = await StockChecker.StockCheckerAsync(urls[i], retailer);
+                        result = await StockChecker.StockCheckerAsync(urls[i], retailer);
                     }
 
                     if (result == true)
-                    {                    
+                    {
                         Console.WriteLine($"\nItem {urlNumber} is in stock\nURL: {urls[i]}");
                         urls.Remove(urls[i]);
-                        if(urls.Count >= 1)
+                        if (urls.Count >= 1)
                         {
                             result = false;
                         }
                     }
-                    else if(retailer == 0 && result == false)
+                    else if (retailer == 0 && result == false)
                     {
 
                     }
-                    else if(result == false)
+                    else if (result == false)
                     {
                         Console.WriteLine($"URL {urlNumber} Out Of Stock");
                         //Timeout before starting checks again
                         Thread.Sleep(sleepTime);
                     }
-            }
+
+                    if(urls.Count == 0)
+                    {
+                        return true;
+                    }
+                }
             return true;
         }
     }
