@@ -22,24 +22,43 @@ namespace StockIndicator
         public const string currysNodeContains = "Add to basket";
 
 
-        public static async Task<bool> StockCheckerAsync(string url, int retailer)
+        public static string WhatRetailer(string url)
+        {
+            var retailer = " ";
+            if (url.ToLower().Contains("currys"))
+            {
+                retailer = "currys";
+            }
+            else if (url.ToLower().Contains("argos"))
+            {
+                retailer = "argos";
+            }
+            else if (url.ToLower().Contains("amazon"))
+            {
+                retailer = "amazon";
+
+            }
+            return retailer;
+        }
+
+        public static async Task<bool> StockCheckerAsync(string url, string retailer)
         {
             var node = " ";
             var nodeContains = " ";
-            switch(retailer)
+            if (retailer.Contains("currys"))
             {
-                case 1:
-                    node = currysNode;
-                    nodeContains = currysNodeContains;
-                    break;
-                case 2:
-                    node = argosNode;
-                    nodeContains = argosNodeContains;
-                    break;
-                case 3: 
-                    node = amazonNode;
-                    nodeContains = amazonNodeContains;
-                    break;
+                node = currysNode;
+                nodeContains = currysNodeContains;
+            }
+            else if (retailer.Contains("argos"))
+            {
+                node = argosNode;
+                nodeContains = argosNodeContains;
+            }
+            else if (retailer.Contains("amazon"))
+            {
+                node = amazonNode;
+                nodeContains = amazonNodeContains;
             }
 
             bool IsTrue = false;
@@ -53,7 +72,8 @@ namespace StockIndicator
                     foreach (var item in htmlDoc.DocumentNode.SelectNodes(node))
                     {
 
-                        if (item.InnerText.Contains(nodeContains) && retailer == 2)
+                        //If the retailer is argos returns false because we are tracking an out of stock text element
+                        if (item.InnerText.Contains(nodeContains) && retailer.Contains("argos"))
                         {
                             return false;
                         }
@@ -66,7 +86,7 @@ namespace StockIndicator
                 }
                 catch (NullReferenceException)
                 {
-                    if(retailer == 2)
+                    if(retailer.Contains("argos"))
                     {
                         return true;
                     }
@@ -74,7 +94,7 @@ namespace StockIndicator
                 }
                 IsTrue = true;
             }
-            if(retailer == 2)
+            if(retailer.Contains("argos"))
             {
                 return true;
             }

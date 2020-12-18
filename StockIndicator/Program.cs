@@ -9,16 +9,14 @@ namespace StockIndicator
 {
     public class Program
     {
-
         public static async Task Main()
         {
             var sleepTime = SleepTimer();
             var urls = GetURL();
+            
             await IsInStockAsync(urls, sleepTime);
             Console.WriteLine("No Items left to track, press enter to exit");
-
         }
-
 
         public static int SleepTimer()
         {
@@ -100,16 +98,16 @@ namespace StockIndicator
         public static async Task<bool> IsInStockAsync(List<string> urls, int sleepTime)
         {
             var result = false;
+
             while (result == false)
                 for (int i = 0; i < urls.Count; i++)
                 {
-                    var urlNumber = i + 1;
-                    Console.WriteLine($"\nChecking For URL {urlNumber}'s Stock...");
-
-                    var retailer = WhatRetailer(urls[i]);
-                    if (retailer == 0)
+                    var retailer = StockChecker.WhatRetailer(urls[i]);    
+                    
+                    Console.WriteLine($"\nChecking For {retailer} {i + 1} Stock...");
+                    if (retailer == null)
                     {
-                        Console.WriteLine($"URL {urlNumber} is invalid, Skipping to next in list");
+                        Console.WriteLine($" your {retailer} URL is invalid, Removing from list");
                         urls.Remove(urls[i]);
                     }
                     else
@@ -119,20 +117,20 @@ namespace StockIndicator
 
                     if (result == true)
                     {
-                        Console.WriteLine($"\nItem {urlNumber} is in stock\nURL: {urls[i]}");
+                        Console.WriteLine($"\n{retailer}'s Item is in stock\nURL: {urls[i]}");
                         urls.Remove(urls[i]);
                         if (urls.Count >= 1)
                         {
                             result = false;
                         }
                     }
-                    else if (retailer == 0 && result == false)
+                    else if (retailer == null && result == false)
                     {
 
                     }
                     else if (result == false)
                     {
-                        Console.WriteLine($"URL {urlNumber} Out Of Stock");
+                        Console.WriteLine($"{retailer}'s item Is Out Of Stock");
                         //Timeout before starting checks again
                         Thread.Sleep(sleepTime);
                     }
