@@ -11,6 +11,7 @@ namespace StockIndicator
     {
         public static async Task Main()
         {
+            Console.WriteLine("Currently supported retailers:\nCurrys\nArgos\nAmazon\n\n");
             var sleepTime = SleepTimer();
             var urls = GetURL();
             
@@ -18,58 +19,6 @@ namespace StockIndicator
             Console.WriteLine("No Items left to track, press enter to exit");
         }
 
-        public static int SleepTimer()
-        {
-            int sleepTime;
-            try
-            {
-                Console.WriteLine("Input in Ms how often you want to check for stock (e.g. 5000 = 5 seconds)\nMinimum 5 seconds");
-                sleepTime = Convert.ToInt32(Console.ReadLine());
-
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Defaulted to 5 seconds");
-                return 5000;
-            }
-            if (sleepTime < 5000)
-            {
-                return 5000;
-            }
-            return sleepTime;
-
-        }
-        public static List<String> GetURL()
-        {
-            var noOfUrls = 0;
-            List<string> urls = new List<string>();
-            bool input = false;
-            while (input == false)
-            {
-                try
-                {
-                    Console.WriteLine("How many URL's do you want to track");
-                    noOfUrls = Convert.ToInt32(Console.ReadLine());
-                    if (noOfUrls >= 1)
-                    {
-                        input = true;
-                    }
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Invalid Input");
-                }
-            }
-
-            for (int i = 0; i < noOfUrls; i++)
-            {
-                var counter = i + 1;
-                Console.WriteLine("\nInput URL " + counter + ": ");
-                var url = Console.ReadLine();
-                urls.Add(url);
-            }
-            return urls;
-        }
 
         public static async Task<bool> IsInStockAsync(List<string> urls, int sleepTime)
         {
@@ -117,6 +66,60 @@ namespace StockIndicator
                     }
                 }
             return true;
+        }
+
+        public static int SleepTimer()
+        {
+            int sleepTime;
+            try
+            {
+                Console.WriteLine("Input in Ms how often you want to check for stock (e.g. 5000 = 5 seconds)\nMinimum 5 seconds");
+                sleepTime = Convert.ToInt32(Console.ReadLine());
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Defaulted to 5 seconds");
+                return 5000;
+            }
+            if (sleepTime < 5000)
+            {
+                return 5000;
+            }
+            return sleepTime;
+
+        }
+
+        public static List<String> GetURL()
+        {
+            var noOfUrls = 0;
+            List<string> urls = new List<string>();
+            bool input = false;
+            while (input == false)
+            {
+                try
+                {
+                    Console.WriteLine("How many URL's do you want to track");
+                    noOfUrls = Convert.ToInt32(Console.ReadLine());
+                    if (noOfUrls >= 1)
+                    {
+                        input = true;
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid Input");
+                }
+            }
+
+            for (int i = 0; i < noOfUrls; i++)
+            {
+                var counter = i + 1;
+                Console.WriteLine("\nInput URL " + counter + ": ");
+                var url = Console.ReadLine();
+                urls.Add(url);
+            }
+            return urls;
         }
     }
 }
