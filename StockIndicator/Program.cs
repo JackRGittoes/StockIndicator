@@ -71,30 +71,6 @@ namespace StockIndicator
             return urls;
         }
 
-        public static int WhatRetailer(string url)
-        {
-            /* 1 = Currys
-             * 2 = Argos
-             * 3 = Amazon 
-             */
-
-            //Returns an integer value representing which retailer
-            if (url.ToLower().Contains("currys"))
-            {
-                return 1;
-            }
-            else if (url.ToLower().Contains("argos"))
-            {
-                return 2;
-            }
-            else if (url.ToLower().Contains("amazon"))
-            {
-                return 3;
-            }
-            return 0;
-        }
-
-
         public static async Task<bool> IsInStockAsync(List<string> urls, int sleepTime)
         {
             var result = false;

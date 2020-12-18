@@ -17,8 +17,9 @@ namespace StockIndicator
         public const string amazonNode = "//div";
         public const string argosNode = "//strong";
         public const string currysNode = "//div";
+
         public const string amazonNodeContains = "Add to Basket";
-        public const string argosNodeContains= "Not available";
+        public const string argosNodeContains = "Not available";
         public const string currysNodeContains = "Add to basket";
 
 
@@ -37,6 +38,10 @@ namespace StockIndicator
             {
                 retailer = "amazon";
 
+            }
+            else if (url.ToLower().Contains("scan"))
+            {
+                retailer = "ScanComputers";
             }
             return retailer;
         }
@@ -61,6 +66,7 @@ namespace StockIndicator
                 nodeContains = amazonNodeContains;
             }
 
+
             bool IsTrue = false;
             while (IsTrue == false)
             {
@@ -77,7 +83,7 @@ namespace StockIndicator
                         {
                             return false;
                         }
-                        else if(item.InnerText.Contains(nodeContains))
+                        else if (item.InnerText.Contains(nodeContains))
                         {
                             return true;
                         }
@@ -86,7 +92,7 @@ namespace StockIndicator
                 }
                 catch (NullReferenceException)
                 {
-                    if(retailer.Contains("argos"))
+                    if (retailer.Contains("argos"))
                     {
                         return true;
                     }
@@ -94,7 +100,7 @@ namespace StockIndicator
                 }
                 IsTrue = true;
             }
-            if(retailer.Contains("argos"))
+            if (retailer.Contains("argos"))
             {
                 return true;
             }
