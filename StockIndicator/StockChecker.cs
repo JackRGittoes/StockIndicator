@@ -19,12 +19,14 @@ namespace StockIndicator
         public const string currysNode = "//div";
         public const string gameNode = "//div";
         public const string scanNode = "//div";
+        public const string smythsNode = "//div";
 
         public const string amazonNodeContains = "Add to Basket";
         public const string argosNodeContains = "Not available";
         public const string currysNodeContains = "Add to basket";
         public const string gameNodeContains = "out of stock";
         public const string scanNodeContains = "In stock";
+        public const string smythsNodeContains = "Out of Stock";
 
 
         public static string WhatRetailer(string url)
@@ -43,13 +45,17 @@ namespace StockIndicator
                 retailer = "amazon";
 
             }
-            else if(url.ToLower().Contains("game"))
+            else if(url.ToLower().Contains("game.co.uk"))
             {
                 retailer = "game";
             }
             else if(url.ToLower().Contains("scan"))
             {
                 retailer = "scan";
+            }
+            else if(url.ToLower().Contains("smyths"))
+            {
+                retailer = "smyths";
             }
             return retailer;
         }
@@ -83,6 +89,11 @@ namespace StockIndicator
                 node = scanNode;
                 nodeContains = scanNodeContains;
             }
+            else if(retailer.Contains("smyths"))
+            {
+                node = smythsNode;
+                nodeContains = smythsNodeContains;
+            }
 
 
             bool IsTrue = false;
@@ -97,7 +108,7 @@ namespace StockIndicator
                     {
 
                         //If the retailer is argos returns false because we are tracking an out of stock text element
-                        if (item.InnerText.Contains(nodeContains) && retailer.Contains("argos") || item.InnerText.Contains(nodeContains) && retailer.Contains("game"))
+                        if (item.InnerText.Contains(nodeContains) && retailer.Contains("argos") || item.InnerText.Contains(nodeContains) && retailer.Contains("game") || item.InnerText.Contains(nodeContains) && retailer.Contains("smyths"))
                         {
                             return false;
                         }
@@ -110,7 +121,7 @@ namespace StockIndicator
                 }
                 catch (NullReferenceException)
                 {
-                    if (retailer.Contains("argos") || retailer.Contains("game"))
+                    if (retailer.Contains("argos") || retailer.Contains("game") || retailer.Contains("smyths"))
                     {
                         return true;
                     }
@@ -118,7 +129,7 @@ namespace StockIndicator
                 }
                 IsTrue = true;
             }
-            if (retailer.Contains("argos") || retailer.Contains("game"))
+            if (retailer.Contains("argos") || retailer.Contains("game") || retailer.Contains("smyths"))
             {
                 return true;
             }
