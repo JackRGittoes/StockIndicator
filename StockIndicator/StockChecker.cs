@@ -18,11 +18,13 @@ namespace StockIndicator
         public const string argosNode = "//strong";
         public const string currysNode = "//div";
         public const string gameNode = "//div";
+        public const string scanNode = "//div";
 
         public const string amazonNodeContains = "Add to Basket";
         public const string argosNodeContains = "Not available";
         public const string currysNodeContains = "Add to basket";
         public const string gameNodeContains = "out of stock";
+        public const string scanNodeContains = "In stock";
 
 
         public static string WhatRetailer(string url)
@@ -44,6 +46,10 @@ namespace StockIndicator
             else if(url.ToLower().Contains("game"))
             {
                 retailer = "game";
+            }
+            else if(url.ToLower().Contains("scan"))
+            {
+                retailer = "scan";
             }
             return retailer;
         }
@@ -67,10 +73,15 @@ namespace StockIndicator
                 node = amazonNode;
                 nodeContains = amazonNodeContains;
             }
-            else if(retailer.Contains("game"))
+            else if (retailer.Contains("game"))
             {
                 node = gameNode;
                 nodeContains = gameNodeContains;
+            }
+            else if (retailer.Contains("scan"))
+            {
+                node = scanNode;
+                nodeContains = scanNodeContains;
             }
 
 
