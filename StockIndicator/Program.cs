@@ -11,7 +11,7 @@ namespace StockIndicator
     {
         public static async Task Main()
         {
-            Console.WriteLine("Currently supported retailers:\nCurrys\nArgos\nAmazon\n\n");
+            Console.WriteLine("Currently supported retailers:\nCurrys\nArgos\nAmazon\nGame\n\n");
             var sleepTime = SleepTimer();
             var urls = GetURL();
             
