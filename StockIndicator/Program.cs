@@ -99,7 +99,7 @@ namespace StockIndicator
             {
                 try
                 {
-                    Console.WriteLine("How many URL's do you want to track");
+                    Console.WriteLine("\nHow many URL's do you want to track");
                     noOfUrls = Convert.ToInt32(Console.ReadLine());
                     if (noOfUrls >= 1)
                     {
