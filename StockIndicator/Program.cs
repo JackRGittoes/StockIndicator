@@ -84,6 +84,7 @@ namespace StockIndicator
             }
             if (sleepTime < 5000)
             {
+                Console.WriteLine("Defaulted to 5 seconds");
                 return 5000;
             }
             return sleepTime;
